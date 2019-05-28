@@ -20,7 +20,6 @@
     "@types/express-jwt": "0.0.42",
     "body-parser": "^1.19.0",
     "cors": "2.7.1",
-    "ejs": "2.4.1",
     "errorhandler": "1.4.3",
     "express": "^4.17.1",
     "express-jwt": "^5.3.1",
