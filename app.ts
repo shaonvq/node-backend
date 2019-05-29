@@ -1,11 +1,14 @@
 import bodyParser from "body-parser";
 import cors from "cors";
+import dotenv from "dotenv";
 import errorhandler from "errorhandler";
 import express from "express";
 import session from "express-session";
 import methodOverride from "method-override";
 import morgan from "morgan";
 import routes from "./routes";
+
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -30,14 +33,14 @@ if (!isProduction) {
 
 app.use(routes);
 
-/// catch 404 and forward to error handler
+// catch 404 and forward to error handler
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
   next(err);
 });
 
-/// error handlers
+// error handlers
 
 // development error handler
 // will print stacktrace
@@ -54,6 +57,15 @@ if (!isProduction) {
   });
 }
 
+app.use((err, req, res, next) => {
+  if (err.name === "UnauthorizedError") {
+    return res.status(403).send({
+      message: "No token provided.",
+      success: false,
+    });
+  }
+});
+
 // production error handler
 // no stacktraces leaked to user
 app.use((err, req, res, next) => {
@@ -65,6 +77,6 @@ app.use((err, req, res, next) => {
 });
 
 // finally, let's start our server...
-const server = app.listen( process.env.PORT || 3000, () => {
+const server = app.listen( process.env.PORT || 3333, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });
