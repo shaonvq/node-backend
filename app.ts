@@ -5,7 +5,6 @@ import errorhandler from "errorhandler";
 import express from "express";
 import ejwt from "express-jwt";
 import session from "express-session";
-import methodOverride from "method-override";
 import morgan from "morgan";
 import routes from "./routes";
 
@@ -23,7 +22,6 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(methodOverride());
 app.use(express.static(__dirname + "/public"));
 
 app.use(routes);
@@ -51,7 +49,7 @@ app.use((err, req, res, next) => {
   }});
 });
 
-// finally, let's start our server...
-const server = app.listen( process.env.PORT || 3333, () => {
+// finally, let's start our server..
+const server = app.listen( process.env.PORT || 3000, () => {
   console.log(`Listening on port ${process.env.PORT}`);
 });

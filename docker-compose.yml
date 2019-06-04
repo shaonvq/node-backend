@@ -1,6 +1,7 @@
-version: '3.5'
+version: '3.6'
 
 services:
+  # Postgres
   postgres:
     container_name: postgres_container
     image: postgres
@@ -9,29 +10,55 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       PGDATA: /data/postgres
     volumes:
-       - postgres:/data/postgres
+        - postgres:/data/postgres
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - backend
     restart: unless-stopped
   
+  # PGAdmin
   pgadmin:
     container_name: pgadmin_container
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-    volumes:
-       - pgadmin:/root/.pgadmin
+      PGDATA: /data/postgres
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
-      - postgres
+      - backend
+    volumes:
+      - pgadmin:/root/.pgadmin
+    restart: unless-stopped
+
+  # Redis
+  redis:
+    container_name: redis_container
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    restart: unless-stopped
+  
+  # Backend
+  backend-api:
+    container_name: backend_container
+    build: ./
+    volumes:
+      - ./:/usr/src/backend-api
+    command: npm run dev
+    working_dir: /usr/src/backend-api
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
     restart: unless-stopped
 
 networks:
-  postgres:
+  backend:
     driver: bridge
 
 volumes:
