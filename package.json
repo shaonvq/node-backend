@@ -34,7 +34,7 @@
     "request": "^2.88.0",
     "ts-node": "^8.2.0",
     "typescript": "^3.5.1",
-    "underscore": "1.8.3"
+    "underscore": "1.12.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
